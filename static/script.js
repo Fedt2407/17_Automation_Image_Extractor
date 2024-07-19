@@ -45,13 +45,17 @@ dragArea.addEventListener("drop", (event) => {
   dragText.textContent = `File selezionato: ${file.name}`;
 });
 
-// Remove the file info message after upload
+// Handle form submission
 uploadForm.addEventListener("submit", (event) => {
   event.preventDefault(); // Prevent form from submitting the default way
+
+  // Show spinner while processing
+  dragText.innerHTML = `Elaborazione in corso <i class="fas fa-spinner fa-spin"></i>`;
 
   // Create a FormData object to send the file via fetch
   const formData = new FormData(uploadForm);
 
+  // Send the file using fetch
   // Send the file using fetch
   fetch(uploadForm.action, {
     method: "POST",
@@ -61,20 +65,13 @@ uploadForm.addEventListener("submit", (event) => {
     .then((data) => {
       // Update the UI with the response
       if (data.success) {
-        dragText.textContent = `Estrazione immagini da avvenuta con successo.`;
-
-        setTimeout(() => {
-          fileInfo.innerHTML = "";
-          dragText.textContent = "Trascina il PDF";
-          fileInput.value = ""; // Clear the file input
-          location.reload(); // Reload the page to reset the form
-        }, 5000); // Clear the message after 5 seconds
+        dragText.textContent = `Estrazione immagini avvenuta con successo.`;
       } else {
-        fileInfo.innerHTML = "<p>Failed to upload file.</p>";
+        dragText.textContent = `Nessun file selezionato.`;
       }
     })
     .catch((error) => {
       console.error("Error:", error);
-      fileInfo.innerHTML = "<p>An error occurred while uploading the file.</p>";
+      dragText.textContent = `Errore durante l'estrazione delle immagini.`;
     });
 });
