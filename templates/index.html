@@ -17,16 +17,36 @@
         class="logo"
       />
       <h1 class="title">Image Extractor</h1>
+
       <div class="drag-area">
         <p>Trascina il PDF</p>
       </div>
-      <input type="file" id="file-input" style="display: none" />
-      <button
-        class="browse-btn"
-        onclick="document.getElementById('file-input').click()"
+
+      <form
+        action="{{ url_for('upload') }}"
+        method="post"
+        enctype="multipart/form-data"
       >
-        Cerca nei file
-      </button>
+        <input
+          type="file"
+          id="file-input"
+          name="pdf"
+          accept="application/pdf"
+          style="display: none"
+        />
+        <button
+          class="browse-btn"
+          type="button"
+          onclick="document.getElementById('file-input').click()"
+        >
+          Cerca nei file
+        </button>
+        <button type="submit" class="submit-btn">Upload</button>
+      </form>
+
+      {% if file_name %}
+      <p>File uploaded: {{ file_name }}</p>
+      {% endif %}
     </div>
   </body>
 </html>
