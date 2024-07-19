@@ -79,7 +79,7 @@ def upload():
         downloads_folder = get_downloads_folder()
 
         # Output folder to save the images, now using the modified name in the Downloads folder
-        output_folder = os.path.join(downloads_folder, pdf_name_without_extension)
+        output_folder = os.path.join(downloads_folder, f"Extractor_{pdf_name_without_extension}")
 
         try:
             save_images_from_pdf(temp_pdf_path, output_folder)
