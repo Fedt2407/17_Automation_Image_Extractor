@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Extractor</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <img
+        src="{{ url_for('static', filename='mo_squared.png') }}"
+        alt="Logo"
+        class="logo"
+      />
+      <h1 class="title">Image Extractor</h1>
+      <div class="drag-area">
+        <p>Trascina il PDF</p>
+      </div>
+      <input type="file" id="file-input" style="display: none" />
+      <button
+        class="browse-btn"
+        onclick="document.getElementById('file-input').click()"
+      >
+        Cerca nei file
+      </button>
+    </div>
+  </body>
+</html>
