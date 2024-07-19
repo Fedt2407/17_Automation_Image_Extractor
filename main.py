@@ -87,7 +87,7 @@ def upload():
             # Ensure the temporary file is deleted
             os.remove(temp_pdf_path)
 
-        return jsonify(success=True, file_name=pdf_name_without_extension), 200
+        return jsonify(success=True), 200
 
     return jsonify(success=False, error="Unexpected error"), 500
 

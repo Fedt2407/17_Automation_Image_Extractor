@@ -42,14 +42,12 @@
         >
           Cerca nei file
         </button>
-        <button type="submit" class="submit-btn">Upload</button>
+        <button type="submit" class="browse-btn">Estrai immagini</button>
       </form>
-
-      <div id="file-info">
-        {% if file_name %}
-        <p>File uploaded: {{ file_name }}</p>
-        {% endif %}
+      <div class="progress-container">
+        <div id="progress-bar" class="progress-bar"></div>
       </div>
+
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>

@@ -61,10 +61,13 @@ uploadForm.addEventListener("submit", (event) => {
     .then((data) => {
       // Update the UI with the response
       if (data.success) {
-        fileInfo.innerHTML = `<p>Estrazione immagini da: ${data.file_name} avvenuta con successo.</p>`;
+        dragText.textContent = `Estrazione immagini da avvenuta con successo.`;
+
         setTimeout(() => {
           fileInfo.innerHTML = "";
           dragText.textContent = "Trascina il PDF";
+          fileInput.value = ""; // Clear the file input
+          location.reload(); // Reload the page to reset the form
         }, 5000); // Clear the message after 5 seconds
       } else {
         fileInfo.innerHTML = "<p>Failed to upload file.</p>";
