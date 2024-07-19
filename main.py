@@ -3,7 +3,7 @@ import os
 import tempfile
 from PIL import Image
 from io import BytesIO
-from flask import Flask, request, redirect, url_for, render_template
+from flask import Flask, request, render_template, jsonify
 
 app = Flask(__name__)
 
@@ -52,14 +52,15 @@ def index():
     return render_template('index.html', file_name=file_name)
 
 @app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload():
     if 'pdf' not in request.files:
-        return 'No file part'
+        return jsonify(success=False, error="No file part"), 400
     
     file = request.files['pdf']
     
     if file.filename == '':
-        return 'No selected file'
+        return jsonify(success=False, error="No selected file"), 400
     
     if file:
         # Create a temporary file
@@ -86,7 +87,9 @@ def upload():
             # Ensure the temporary file is deleted
             os.remove(temp_pdf_path)
 
-        return redirect(url_for('index', file_name=pdf_name_without_extension))
+        return jsonify(success=True, file_name=pdf_name_without_extension), 200
+
+    return jsonify(success=False, error="Unexpected error"), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
