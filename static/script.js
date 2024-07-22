@@ -6,7 +6,7 @@ const uploadForm = document.getElementById("upload-form");
 
 // Event listener for file input change
 fileInput.addEventListener("change", (event) => {
-  const fileName = event.target.files[0].name;
+  const fileName = event.target.files[0]?.name;
   dragText.textContent = `File selezionato: ${fileName}`;
 });
 
@@ -66,6 +66,9 @@ uploadForm.addEventListener("submit", (event) => {
       // Update the UI with the response
       if (data.success) {
         dragText.textContent = `Estrazione immagini avvenuta con successo.`;
+        console.log(data);
+      } else if (data.length === 0) {
+        dragText.textContent = `Nessuna immagine presente nel file caricato.`;
       } else {
         dragText.textContent = `Nessun file selezionato.`;
       }
