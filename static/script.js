@@ -56,7 +56,6 @@ uploadForm.addEventListener("submit", (event) => {
   const formData = new FormData(uploadForm);
 
   // Send the file using fetch
-  // Send the file using fetch
   fetch(uploadForm.action, {
     method: "POST",
     body: formData,
@@ -66,7 +65,34 @@ uploadForm.addEventListener("submit", (event) => {
       // Update the UI with the response
       if (data.success) {
         dragText.textContent = `Estrazione immagini avvenuta con successo.`;
-        console.log(data);
+
+        // Supponiamo che tu restituisca il nome del file da scaricare nella risposta
+        const filename = data.filename; // Assicurati che il tuo backend restituisca questo campo
+
+        // Esegui la chiamata per scaricare il file
+        fetch(`/download/${filename}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Errore nel download del file");
+            }
+            return response.blob(); // Ottieni il file come blob
+          })
+          .then((blob) => {
+            // Crea un URL per il blob e scarica il file
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            a.download = filename; // Imposta il nome del file da scaricare
+            document.body.appendChild(a);
+            a.click(); // Simula il click per scaricare
+            window.URL.revokeObjectURL(url); // Libera l'URL
+            a.remove(); // Rimuovi l'elemento dal DOM
+          })
+          .catch((error) => {
+            console.error("Error downloading file:", error);
+            dragText.textContent = `Errore durante il download del file.`;
+          });
       } else if (data.length === 0) {
         dragText.textContent = `Nessuna immagine presente nel file caricato.`;
       } else {
