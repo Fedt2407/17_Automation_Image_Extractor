@@ -3,8 +3,12 @@ import os
 import tempfile
 from PIL import Image
 from io import BytesIO
-from flask import Flask, request, render_template, jsonify, send_from_directory
+from flask import Flask, request, render_template, jsonify, send_from_directory, redirect, flash
 import zipfile
+import shutil
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Necessario per utilizzare flash
 
 def create_zip_of_images(output_folder, zip_path):
     with zipfile.ZipFile(zip_path, 'w') as zip_file:
@@ -13,11 +17,14 @@ def create_zip_of_images(output_folder, zip_path):
                 file_path = os.path.join(foldername, filename)
                 zip_file.write(file_path, os.path.relpath(file_path, output_folder))
 
-app = Flask(__name__)
-
+# Create the output folder if it doesn't exist
 def get_output_folder():
-    # Create the output folder if it doesn't exist
     return os.path.join(os.path.dirname(__file__), 'output_images')
+
+# Delete the output folder and its contents once process is done
+def delete_output_folder(output_folder):
+    if os.path.exists(output_folder):
+        shutil.rmtree(output_folder)
 
 def save_images_from_pdf(pdf_path, output_folder):
     pdf_document = fitz.open(pdf_path)
@@ -83,7 +90,14 @@ def upload():
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    return send_from_directory('output_images', filename, as_attachment=True)
+    output_folder = get_output_folder()
+    return send_from_directory(output_folder, filename, as_attachment=True)
+
+@app.route('/delete_folder', methods=['POST'])
+def delete_folder():
+    output_folder = get_output_folder()
+    delete_output_folder(output_folder)
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run(debug=True)

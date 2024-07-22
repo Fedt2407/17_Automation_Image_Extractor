@@ -66,7 +66,6 @@ uploadForm.addEventListener("submit", (event) => {
       if (data.success) {
         dragText.textContent = `Estrazione immagini avvenuta con successo.`;
 
-        // Supponiamo che tu restituisca il nome del file da scaricare nella risposta
         const filename = data.filename; // Assicurati che il tuo backend restituisca questo campo
 
         // Esegui la chiamata per scaricare il file
@@ -88,10 +87,19 @@ uploadForm.addEventListener("submit", (event) => {
             a.click(); // Simula il click per scaricare
             window.URL.revokeObjectURL(url); // Libera l'URL
             a.remove(); // Rimuovi l'elemento dal DOM
+
+            // Chiama la rotta per eliminare la directory
+            return fetch("/delete_folder", { method: "POST" });
+          })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Errore nella cancellazione della directory");
+            }
+            console.log("Directory eliminata con successo.");
           })
           .catch((error) => {
-            console.error("Error downloading file:", error);
-            dragText.textContent = `Errore durante il download del file.`;
+            console.error("Error:", error);
+            dragText.textContent = `Errore durante l'estrazione delle immagini.`;
           });
       } else if (data.length === 0) {
         dragText.textContent = `Nessuna immagine presente nel file caricato.`;
