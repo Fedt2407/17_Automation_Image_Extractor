@@ -6,9 +6,13 @@ from io import BytesIO
 from flask import Flask, request, render_template, jsonify, send_from_directory, redirect, flash
 import zipfile
 import shutil
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Necessario per utilizzare flash
+app.secret_key = os.getenv('APP_KEY')
 
 def create_zip_of_images(output_folder, zip_path):
     with zipfile.ZipFile(zip_path, 'w') as zip_file:
